@@ -61,3 +61,26 @@ def test_log_entry_render_contains_fields() -> None:
     rendered = entry.render()
     assert entry.level in rendered
     assert entry.service in rendered
+
+
+def test_metric_sparkline() -> None:
+    m = Metric(MetricConfig("cpu", "%", history=10))
+    assert m.sparkline() == ""
+    for v in range(1, 9):
+        m.push(float(v))
+    spark = m.sparkline(width=8)
+    assert len(spark) == 8
+    # monotonically increasing values produce ascending spark characters
+    assert spark == " ▂▃▄▅▆▇█"
+
+
+def test_system_source_if_available() -> None:
+    from termdash.metrics import PSUTIL_AVAILABLE, SystemSource
+
+    if PSUTIL_AVAILABLE:
+        src = SystemSource()
+        sample = src.sample()
+        assert "cpu" in sample and "mem" in sample
+        assert 0.0 <= sample["cpu"] <= 100.0
+        assert 0.0 <= sample["mem"] <= 100.0
+

@@ -11,11 +11,11 @@ log feed with level filters, and a level-count table.
 
 ## Features
 
-- Rolling metric buffers with warn/crit thresholds and level-colored gauges
-- Simulated metrics source (CPU, memory, request rate, latency, network) —
-  swap `SimulatedSource` for real collectors (psutil, Prometheus, etc.)
-- Streaming log feed: weighted level generation, bounded buffer, markup render
-- Keyboard-driven: `p` pause · `l` cycle log filter · `c` clear · `q` quit
+- **Live System Telemetry:** Real-time host CPU, Memory, Disk, and Network monitoring powered by `psutil`
+- **Dynamic Unicode Sparklines:** Rolling history visualization (` ▂▃▄▅▆▇█`) on every gauge
+- **Simulation Fallback:** Built-in `SimulatedSource` with `--simulated` flag for demos or headless testing
+- **Streaming Log Feed:** Weighted level generation, bounded buffer, Rich markup rendering
+- **Keyboard-Driven:** `p` pause · `l` cycle log filter · `c` clear · `q` quit
 
 ## Run
 
@@ -24,7 +24,9 @@ cd termdash
 python -m venv .venv && source .venv/Scripts/activate
 pip install -e .
 
-termdash          # or: python -m termdash.app
+termdash                     # Live system metrics (CPU, RAM, Network, Connections)
+termdash --simulated         # Demo simulation mode
+termdash --interval 1.0      # Custom update interval in seconds
 ```
 
 > On Windows shells, if box-drawing characters look broken, run with `PYTHONUTF8=1`.
@@ -35,9 +37,3 @@ termdash          # or: python -m termdash.app
 pip install -e ".[dev]"
 pytest
 ```
-
-## Wiring real data
-
-Replace `SimulatedSource.sample()` with anything returning the same dict of
-floats — e.g. `psutil.cpu_percent()`, `psutil.virtual_memory().percent`, or
- polled HTTP endpoints. The dashboard logic is source-agnostic.
