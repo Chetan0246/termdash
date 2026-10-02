@@ -169,9 +169,18 @@ class DashboardApp(App[None]):
 
 def main(args: list[str] | None = None) -> None:
     """Console-script entrypoint with CLI options."""
-    parser = argparse.ArgumentParser(description="termdash - realtime terminal operations dashboard")
-    parser.add_argument("--simulated", action="store_true", help="Run with simulated telemetry data")
-    parser.add_argument("--interval", type=float, default=0.5, help="Sampling interval in seconds (default: 0.5)")
+    parser = argparse.ArgumentParser(
+        description="termdash - realtime terminal operations dashboard"
+    )
+    parser.add_argument(
+        "--simulated", action="store_true", help="Run with simulated telemetry data"
+    )
+    parser.add_argument(
+        "--interval",
+        type=float,
+        default=0.5,
+        help="Sampling interval in seconds (default: 0.5)",
+    )
     parsed = parser.parse_args(args=args if args is not None else sys.argv[1:])
 
     app = DashboardApp(tick_interval=parsed.interval, simulated=parsed.simulated)

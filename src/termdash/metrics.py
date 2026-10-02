@@ -153,10 +153,12 @@ class SimulatedSource:
 
 
 def default_metrics() -> dict[str, Metric]:
+    rps_name = "Connections/s" if PSUTIL_AVAILABLE else "Requests/s"
+    rps_unit = "active" if PSUTIL_AVAILABLE else "req/s"
     return {
         "cpu": Metric(MetricConfig("CPU", "%", warn_above=70, crit_above=90)),
         "mem": Metric(MetricConfig("Memory", "%", warn_above=75, crit_above=92)),
-        "rps": Metric(MetricConfig("Connections/s" if PSUTIL_AVAILABLE else "Requests/s", "active" if PSUTIL_AVAILABLE else "req/s")),
+        "rps": Metric(MetricConfig(rps_name, rps_unit)),
         "latency": Metric(MetricConfig("Latency", "ms", warn_above=80, crit_above=150)),
         "net_in": Metric(MetricConfig("Net in", "KB/s")),
         "net_out": Metric(MetricConfig("Net out", "KB/s")),
